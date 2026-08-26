@@ -1,0 +1,10 @@
+# dsh-subagent-error-details bundle layer — applied when a profile lists this
+# bundle (package.json declares `dsh.bundle.patch` pointing at this file).
+#
+# `name` is a PACKAGE NAME, resolved through the profile's node_modules (or the
+# installation fallback `$DSH_HOME/profiles/node_modules`), NOT a relative path.
+# Host-plane mounting covers EVERY agent preset: the plugin listens to the
+# scope-carried subagent/end events of all delegating parents.
+- insert:
+    - id: subagent-error-details
+      name: dsh-subagent-error-details
