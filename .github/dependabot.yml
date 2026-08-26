@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    # One grouped PR per dsh rc wave instead of five separate ones: upgrade,
+    # watch CI, fix what the type checker flags, merge.
+    groups:
+      dsh-harness:
+        patterns:
+          - "@deepseek-ai/*"
+    ignore:
+      # TypeScript majors can stay pinned; bump deliberately.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
