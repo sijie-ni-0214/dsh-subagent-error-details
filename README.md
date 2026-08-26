@@ -37,6 +37,12 @@ dsh plugin --profile web add dsh-subagent-error-details
 
 (the CLI command is a pnpm wrapper; `cd ~/.dsh/profiles/web && pnpm add dsh-subagent-error-details` is equivalent). The bundle patch mounts the plugin into the profile composition, which is rebuilt at boot, so **restart dsh** to activate.
 
+> **Fresh-release note (pnpm ≥ 11)**: pnpm 11 enables a supply-chain default that rejects package versions published less than 24 hours ago (`minimumReleaseAge`). During the first day after a release, installs may fail with a "minimumReleaseAge" policy error. Either wait 24 hours, or bypass it for this one command:
+>
+> ```bash
+> dsh plugin --profile web add --config.minimumReleaseAge=0 dsh-subagent-error-details
+> ```
+
 Local development installs from a checkout instead:
 
 ```bash
@@ -50,7 +56,7 @@ pnpm add file:/path/to/dsh-subagent-error-details
 - **Never breaks the parent loop**: every path is wrapped; a plugin bug degrades to "no details" instead of an error.
 - **Zero inject, lazy service lookup**: services are resolved via `ctx.get` inside the handlers and every absence degrades gracefully, so activation can never fail a session mount.
 - **Defensive parsing**: session-schema drift degrades gracefully; never crashes on unknown shapes.
-- **Version contract**: `dsh.engines.dsh: ">=0.1.1-rc.2 <0.2"` plus peer dependencies pinned to the harness packages it consumes (`dsh-agent`, `dsh-session`, `dsh-subagent`, `dsh-llm`, `dsh-session-persistence`, `cordis`). Because dsh is pre-release with no compatibility promise, re-verify against each new dsh rc.
+- **Version contract**: `dsh.engines.dsh: ">=0.1.1-rc.2 <0.2"`, with `@deepseek-ai/cordis` as the only peer dependency (the harness packages appear as dev dependencies for their types; the plugin has zero runtime dependencies). Because dsh is pre-release with no compatibility promise, re-verify against each new dsh rc.
 
 ## Known limitations
 
