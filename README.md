@@ -56,7 +56,7 @@ pnpm add file:/path/to/dsh-subagent-error-details
 - **Never breaks the parent loop**: every path is wrapped; a plugin bug degrades to "no details" instead of an error.
 - **Zero inject, lazy service lookup**: services are resolved via `ctx.get` inside the handlers and every absence degrades gracefully, so activation can never fail a session mount.
 - **Defensive parsing**: session-schema drift degrades gracefully; never crashes on unknown shapes.
-- **Version contract**: `dsh.engines.dsh: ">=0.1.1-rc.2 <0.2"`, with `@deepseek-ai/cordis` as the only peer dependency (the harness packages appear as dev dependencies for their types; the plugin has zero runtime dependencies). Because dsh is pre-release with no compatibility promise, re-verify against each new dsh rc.
+- **Version contract**: `dsh.engines.dsh: ">=0.1.1-rc.2 <0.3"`, with `@deepseek-ai/cordis` as the only peer dependency (the harness packages appear as dev dependencies for their types; the plugin has zero runtime dependencies). The companion message carries this plugin's own message-source kind (`subagent-error-details`), declared by augmenting `MessageSourceMap` — the convention dsh 0.2.0 introduced when it removed the shared `plugin` kind. Because dsh is pre-release with no compatibility promise, re-verify against each new dsh rc.
 
 ## Known limitations
 

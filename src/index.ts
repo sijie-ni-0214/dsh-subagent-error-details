@@ -43,6 +43,7 @@ import type { Context } from "@deepseek-ai/cordis";
 import { randomUUID } from "node:crypto";
 import { appendFileSync, existsSync } from "node:fs";
 import { failureFromEvents } from "./extract.js";
+import type { SubagentErrorDetailsMessageSource } from "./message-source.js";
 
 export const name = "dsh-subagent-error-details";
 
@@ -161,18 +162,19 @@ function deliverCompanion(
     // Built inline instead of via dsh-llm's createUserMessage: profiles do
     // not install harness packages, so a runtime import of dsh-llm would not
     // resolve from the profile workspace. The message shape is stable and
-    // simple (stable id + role + content + source); the `plugin` source kind
-    // is the documented one for plugin-produced notices.
+    // simple (stable id + role + content + source); the source kind is this
+    // plugin's own, declared in message-source.ts.
+    const source: SubagentErrorDetailsMessageSource = {
+        kind: "subagent-error-details",
+        form: "notice",
+        summary: `subagent ${childId} failure detail`,
+        senderSessionId: childId,
+    };
     const message: UserMessage = {
         id: randomUUID() as MessageId,
         role: "user",
         content: [{ type: "text", text }],
-        source: {
-            kind: "plugin",
-            plugin: name,
-            form: "notice",
-            summary: `subagent ${childId} failure detail`,
-        },
+        source,
     };
     if ((parent as { status?: string }).status === "idle") {
         parent.followup(message);
